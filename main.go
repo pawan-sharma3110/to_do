@@ -22,7 +22,7 @@ func main() {
 	app := fiber.New()
 	app.Get("/todos", handler.GetToDO)
 	app.Patch("/api/todos/:id", handler.UpdateToDo)
-	// app.Delete("/api/todos/:id")
+	app.Delete("/api/delete/todos/:id", handler.DeleteToDo)
 	app.Post("/todo/create", handler.CreateTodo)
 
 	err = godotenv.Load(".env")
@@ -30,6 +30,6 @@ func main() {
 		log.Fatal("error loading .env file")
 	}
 	port := os.Getenv("PORT")
-	
+
 	log.Fatal(app.Listen(":" + port))
 }
