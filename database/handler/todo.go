@@ -9,6 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+
 func CreateTodo(c *fiber.Ctx) error {
 	db, err := database.DbIn()
 	if err != nil {

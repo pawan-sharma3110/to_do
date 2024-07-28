@@ -20,8 +20,9 @@ func main() {
 	defer db.Close()
 	fmt.Println("Hello World")
 	app := fiber.New()
-	app.Get("/todos", handler.GetToDO)
+	app.Static("/", "./public")
 	app.Patch("/api/todos/:id", handler.UpdateToDo)
+	app.Get("/api/todos", handler.GetToDO)
 	app.Delete("/api/delete/todos/:id", handler.DeleteToDo)
 	app.Post("/todo/create", handler.CreateTodo)
 
@@ -30,6 +31,11 @@ func main() {
 		log.Fatal("error loading .env file")
 	}
 	port := os.Getenv("PORT")
-
+	if port == "" {
+		port = "8080" // Default port
+	}
+	fmt.Printf("Server start on port:%v", port)
+	// Start the server
 	log.Fatal(app.Listen(":" + port))
+
 }
