@@ -15,6 +15,9 @@
         .todo-item.completed {
             text-decoration: line-through;
         }
+        .add-to {
+               margin-bottom: 15px;
+        }
     </style>
 </head>
 <body>
@@ -28,7 +31,7 @@
                     <label for="todoBody">To-Do</label>
                     <input type="text" class="form-control" id="todoBody" placeholder="Enter a new to-do" required>
                 </div>
-                <button type="submit" class="btn btn-primary" id="submitButton">Add To-Do</button>
+                <button type="submit" class="btn btn-primary add-to" id="submitButton">Add To-Do</button>
                 <button type="button" class="btn btn-secondary" id="updateButton" style="display: none;">Update To-Do</button>
             </form>
         </div>
