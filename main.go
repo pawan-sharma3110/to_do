@@ -21,10 +21,11 @@ func main() {
 	fmt.Println("Hello World")
 	app := fiber.New()
 	app.Static("/", "./public")
-	app.Patch("/api/todos/:id", handler.UpdateToDo)
-	app.Get("/api/todos", handler.GetToDO)
-	app.Delete("/api/delete/todos/:id", handler.DeleteToDo)
 	app.Post("/todo/create", handler.CreateTodo)
+	app.Get("/api/todos", handler.GetToDO)
+	app.Patch("/api/todos/:id", handler.UpdateToDo)
+	app.Patch("/api/todos/:id/complete", handler.CompleteToDo)
+	app.Delete("/api/delete/todos/:id", handler.DeleteToDo)
 
 	err = godotenv.Load(".env")
 	if err != nil {

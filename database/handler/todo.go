@@ -9,7 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-
+// CreateTodo creates a new to-do item
 func CreateTodo(c *fiber.Ctx) error {
 	db, err := database.DbIn()
 	if err != nil {
@@ -22,13 +22,12 @@ func CreateTodo(c *fiber.Ctx) error {
 		return err
 	}
 	if todo.Body == "" {
-		return c.Status(400).JSON(fiber.Map{"error": "Todo body is require"})
+		return c.Status(400).JSON(fiber.Map{"error": "Todo body is required"})
 	}
 	// Insert the new to-do item into the database
 	query := `INSERT INTO todos (complete, body) VALUES ($1, $2) RETURNING id`
 	err = db.QueryRow(query, todo.Complete, todo.Body).Scan(&todo.ID)
 	if err != nil {
-
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Error inserting to-do item"})
 	}
 
@@ -36,6 +35,7 @@ func CreateTodo(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(*todo)
 }
 
+// DeleteToDo deletes a to-do item
 func DeleteToDo(c *fiber.Ctx) error {
 	db, err := database.DbIn()
 	if err != nil {
@@ -66,6 +66,8 @@ func DeleteToDo(c *fiber.Ctx) error {
 	// Return success response
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "To-do item deleted successfully"})
 }
+
+// UpdateToDo updates an existing to-do item
 func UpdateToDo(c *fiber.Ctx) error {
 	db, err := database.DbIn()
 	if err != nil {
@@ -89,57 +91,92 @@ func UpdateToDo(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Body is required"})
 	}
 	// Update the existing to-do item in the database
-	query := `UPDATE todos SET complete = $1, body = $2 WHERE id = $3 RETURNING id, complete, body`
-	row := db.QueryRow(query, todo.Complete, todo.Body, todoID)
-	// Scan the updated item
-	updatedToDo := models.ToDo{}
-	err = row.Scan(&updatedToDo.ID, &updatedToDo.Complete, &updatedToDo.Body)
+	query := `UPDATE todos SET complete = $1, body = $2 WHERE id = $3`
+	result, err := db.Exec(query, todo.Complete, todo.Body, todoID)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "To-do item not found"})
-		}
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Error updating to-do item"})
 	}
 
-	// Return the updated to-do item as JSON
-	return c.Status(fiber.StatusOK).JSON(updatedToDo)
+	// Check if any row was updated
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Error getting affected rows"})
+	}
+	if rowsAffected == 0 {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "To-do item not found"})
+	}
 
+	// Return the updated to-do item as JSON
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "To-do item updated successfully"})
 }
+
+// GetToDO gets all to-do items
 func GetToDO(c *fiber.Ctx) error {
 	db, err := database.DbIn()
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Error opening database connection"})
 	}
 	defer db.Close()
-	// Fetch all to-do items
-	rows, err := db.Query("SELECT id, complete, body FROM todos")
+
+	// Query the database for all to-do items
+	query := `SELECT id, complete, body FROM todos`
+	rows, err := db.Query(query)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": "Error fetching to-do items",
-		})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Error fetching to-do items"})
 	}
 	defer rows.Close()
 
-	// Iterate through the rows and create a slice of ToDo
+	// Iterate over the rows and add them to the to-do list
 	var todos []models.ToDo
 	for rows.Next() {
 		var todo models.ToDo
 		err := rows.Scan(&todo.ID, &todo.Complete, &todo.Body)
 		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-				"error": "Error scanning to-do item",
-			})
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Error scanning to-do item"})
 		}
 		todos = append(todos, todo)
 	}
 
-	// Check for errors from iterating over rows.
-	if err = rows.Err(); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": "Error iterating over to-do items",
-		})
+	// Check for any error that occurred during iteration
+	if err := rows.Err(); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Error iterating over to-do items"})
 	}
 
 	// Return the list of to-do items as JSON
-	return c.JSON(todos)
+	return c.Status(fiber.StatusOK).JSON(todos)
+}
+
+// CompleteToDo toggles the "complete" status of a to-do item
+func CompleteToDo(c *fiber.Ctx) error {
+	db, err := database.DbIn()
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Error opening database connection"})
+	}
+	defer db.Close()
+	id := c.Params("id")
+	todoID, err := strconv.Atoi(id)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid ID"})
+	}
+
+	// Fetch the current status of the to-do item
+	var currentComplete bool
+	err = db.QueryRow(`SELECT complete FROM todos WHERE id = $1`, todoID).Scan(&currentComplete)
+	if err == sql.ErrNoRows {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "To-do item not found"})
+	} else if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Error fetching to-do item status"})
+	}
+
+	// Toggle the "complete" status
+	newComplete := !currentComplete
+
+	// Update the "complete" status in the database
+	_, err = db.Exec(`UPDATE todos SET complete = $1 WHERE id = $2`, newComplete, todoID)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Error updating to-do item status"})
+	}
+
+	// Return the updated status as JSON
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"complete": newComplete})
 }
