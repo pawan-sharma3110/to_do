@@ -99,18 +99,24 @@ function fetchTodos() {
 
         // Function to mark a todo as completed
         function completeTodo(id) {
-            fetch(`${apiUrl}/${id}`)
-                .then(response => response.json())
-                .then(todo => {
-                    fetch(`${apiUrl}/${id}`, {
-                        method: 'PATCH',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ ...todo, complete: !todo.complete }),
-                    })
-                    .then(() => fetchTodos())
-                    .catch(error => console.error('Error completing todo:', error));
-                });
+    fetch(`/api/todos/complete/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error completing todo');
         }
+        return response.json();
+    })
+    .then(todo => {
+        // Optionally, you can use the returned `todo` object for additional operations
+        console.log(`To-Do with ID ${id} marked as ${todo.complete ? 'complete' : 'incomplete'}`);
+        fetchTodos(); // Refresh the list after updating
+    })
+    .catch(error => console.error('Error completing todo:', error));
+}
+
 
         // Function to fill the form with todo data for editing
         function editTodo(id, body) {

@@ -24,7 +24,7 @@ func main() {
 	app.Post("/todo/create", handler.CreateTodo)
 	app.Get("/api/todos", handler.GetToDO)
 	app.Patch("/api/todos/:id", handler.UpdateToDo)
-	app.Patch("/api/todos/:id/complete", handler.CompleteToDo)
+	app.Patch("/api/todos/complete/:id", handler.CompleteToDo)
 	app.Delete("/api/delete/todos/:id", handler.DeleteToDo)
 
 	err = godotenv.Load(".env")
