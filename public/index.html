@@ -53,7 +53,7 @@ function fetchTodos() {
                 li.className = `list-group-item todo-item ${todo.complete ? 'completed' : ''}`;
                 li.innerHTML = `
                     <span>${todo.id}: ${todo.body}</span>
-                    <button class="btn btn-sm btn-success float-right ml-2" onclick="completeTodo(${todo.id})">Complete</button>
+                    <button class="btn btn-sm btn-${todo.complete ? 'secondary' : 'success'} float-right ml-2" onclick="completeTodo(${todo.id})">${todo.complete ? 'Mark as Incomplete' : 'Mark as Complete'}</button>
                     <button class="btn btn-sm btn-info float-right ml-2" onclick="editTodo(${todo.id}, '${todo.body}')">Edit</button>
                     <button class="btn btn-sm btn-danger float-right" onclick="deleteTodo(${todo.id})">Delete</button>
                 `;
