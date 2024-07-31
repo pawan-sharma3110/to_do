@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 	"to_do/database"
-	"to_do/database/handler"
+	"to_do/handler"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
@@ -21,7 +21,7 @@ func main() {
 	fmt.Println("Hello World")
 	app := fiber.New()
 	app.Static("/", "./public")
-	app.Post("/todo/create", handler.CreateTodo)
+	app.Post("/api/todo/create", handler.CreateTodo)
 	app.Get("/api/todos", handler.GetToDO)
 	app.Patch("/api/todos/:id", handler.UpdateToDo)
 	app.Patch("/api/todos/complete/:id", handler.CompleteToDo)
@@ -32,9 +32,7 @@ func main() {
 		log.Fatal("error loading .env file")
 	}
 	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080" // Default port
-	}
+
 	fmt.Printf("Server start on port:%v", port)
 	// Start the server
 	log.Fatal(app.Listen(":" + port))

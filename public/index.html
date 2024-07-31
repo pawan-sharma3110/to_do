@@ -42,7 +42,7 @@
     </div>
 
     <script>
-        const apiUrl = 'http://localhost:8081/api/todos'; // Adjusted to your API URL
+        const apiUrl = 'http://localhost:8080/api/todos'; // Adjusted to your API URL
 
 // Function to fetch and display todos
 function fetchTodos() {
@@ -72,7 +72,7 @@ function fetchTodos() {
             const todoId = document.getElementById('todoId').value;
             const todoBody = document.getElementById('todoBody').value;
             const method = todoId ? 'PATCH' : 'POST';
-            const url = todoId ? `${apiUrl}/${todoId}` : '/todo/create';
+            const url = todoId ? `${apiUrl}/${todoId}` : '/api/todo/create';
             const body = JSON.stringify({ body: todoBody, complete: false });
 
             fetch(url, {
