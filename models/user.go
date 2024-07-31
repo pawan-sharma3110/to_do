@@ -8,7 +8,7 @@ import (
 
 type User struct {
 	ID             uuid.UUID `json:"id"`
-	ProfilePicture string    `json:"profile_picture"` // URL of the profile picture
+	ProfilePicture []byte    `json:"profile_picture"` // URL of the profile picture
 	FullName       string    `json:"full_name"`
 	Email          string    `json:"email"`
 	PhoneNo        string    `json:"phone_no"`
