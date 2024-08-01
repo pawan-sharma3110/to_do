@@ -3,122 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Registration</title>
+    <title>To-Do App</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<style>
-    body {
-        background-color: #f8f9fa;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    .container {
-        max-width: 600px;
-    }
-
-    h2 {
-        margin-bottom: 20px;
-    }
-
-    .form-group label {
-        font-weight: bold;
-    }
-
-    .btn-primary {
-        background-color: #007bff;
-        border: none;
-        transition: background-color 0.3s ease;
-    }
-
-    .btn-primary:hover {
-        background-color: #0056b3;
-    }
-
-    .form-control-file {
-        padding: 10px;
-    }
-
-    .alert {
-        margin-top: 20px;
-    }
-    @media (max-width: 768px) {
-        .container {
-            padding: 0 15px;
+    <style>
+        body {
+            background-color: #f4f7f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
         }
-    }
-</style>
+
+        .navbar {
+            margin-bottom: 20px;
+        }
+
+        .hero-section {
+            background: url('./image/hhh');
+            background-size: cover;
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            animation: fadeIn 2s ease-out;
+        }
+
+        .hero-section h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+
+        .hero-section p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: black;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .container {
+            max-width: 900px;
+            margin-top: 20px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 10px;
+            margin-top: 20px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        .footer {
+            background-color: #343a40;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            position: relative;
+            width: 100%;
+            bottom: 0;
+            margin-top: 40px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
 <body>
-    <div class="container mt-5">
-        <h2 class="text-center">User Registration</h2>
-        <form id="registrationForm" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="fullName">Full Name:</label>
-                <input type="text" class="form-control" id="fullName" name="full_name" autocomplete="name" required>
-            </div>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="./index.html">To-Do App</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="login.html">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="register.html">Register</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" class="form-control" id="email" name="email" autocomplete="email" required>
-            </div>
-
-            <div class="form-group">
-                <label for="phoneNo">Phone Number:</label>
-                <input type="text" class="form-control" id="phoneNo" name="phone_no" autocomplete="tel" required>
-            </div>
-
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" class="form-control" id="password" name="password" autocomplete="current-password" required>
-            </div>
-
-            <div class="form-group">
-                <label for="profilePicture">Profile Picture:</label>
-                <input type="file" class="form-control-file" id="profilePicture" name="profile_picture" accept="image/*">
-            </div>
-
-            <button type="submit" class="btn btn-primary btn-block">Register</button>
-        </form>
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container">
+            <h1>Welcome to To-Do App</h1>
+            <p>Your tasks, organized and managed with ease.</p>
+            <a href="register.html" class="btn btn-primary btn-lg">Get Started</a>
+        </div>
     </div>
 
+    <!-- About Section -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <img src="./image/track image.png" class="card-img-top" alt="Manage Your Tasks" height="236px">
+                    <div class="card-body">
+                        <h5 class="card-title">Manage Your Tasks</h5>
+                        <p class="card-text">Keep track of your daily tasks and projects in a streamlined, easy-to-use interface. Stay organized and productive.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <img src="./image/colbrate.jpg" class="card-img-top" alt="Collaborate with Others">
+                    <div class="card-body">
+                        <h5 class="card-title">Collaborate with Others</h5>
+                        <p class="card-text">Share tasks and collaborate with your team or friends. Assign tasks, set deadlines, and stay on top of your projects together.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>&copy; 2024 To-Do App. All rights reserved.</p>
+    </div>
+
+    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>
-        const apiUrl = `http://localhost:8081/api/todo/user/create`
-      document.getElementById('registrationForm').addEventListener('submit', function (event) {
-    event.preventDefault();
-
-    // Create FormData object
-    const formData = new FormData(this);
-
-    // Display a loading message
-    const btn = document.querySelector('button[type="submit"]');
-    btn.innerHTML = 'Submitting...';
-    btn.disabled = true;
-
-    fetch(apiUrl, {  // Correct port for backend
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        // Handle success
-        console.log('Success:', data);
-        // Show success message
-        document.body.insertAdjacentHTML('beforeend', '<div class="alert alert-success">Registration successful!</div>');
-        // Reset form and button
-        document.getElementById('registrationForm').reset();
-        btn.innerHTML = 'Register';
-        btn.disabled = false;
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        // Show error message
-        document.body.insertAdjacentHTML('beforeend', '<div class="alert alert-danger">Registration failed. Please try again.</div>');
-        btn.innerHTML = 'Register';
-        btn.disabled = false;
-    });
-});
-    </script>
 </body>
 </html>
