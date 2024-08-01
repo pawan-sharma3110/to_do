@@ -21,6 +21,7 @@ func main() {
 	fmt.Println("Hello World")
 	app := fiber.New()
 	app.Static("/", "./public")
+	app.Post("/api/todo/user/create", handler.CreateUserHandler)
 	app.Post("/api/todo/create", handler.CreateTodo)
 	app.Get("/api/todos", handler.GetToDO)
 	app.Patch("/api/todos/:id", handler.UpdateToDo)
