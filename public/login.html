@@ -7,12 +7,32 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #f8f9fa;
+            background-color: #f0f2f5;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar {
+            margin-bottom: 30px;
         }
         .container {
             max-width: 500px;
-            margin-top: 100px;
+            margin-top: 150px;
+        }
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
+        }
+        .card-header {
+            background-color: #007bff;
+            color: #fff;
+            border-bottom: none;
+            border-radius: 15px 15px 0 0;
+            text-align: center;
+            padding: 20px;
         }
         .form-control:focus {
             border-color: #007bff;
@@ -35,40 +55,63 @@
         }
         .forgot-password a {
             color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
         }
         .forgot-password a:hover {
             text-decoration: underline;
         }
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 15px;
-            }
-        }
     </style>
 </head>
 <body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="./index.html">To-Do App</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="./login.html">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="./register.html">Register</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
     <div class="container">
-        <h2 class="text-center">Login</h2>
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" class="form-control" id="email" name="email" required>
+        <div class="card">
+            <div class="card-header">
+                <h4>Login</h4>
             </div>
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" class="form-control" id="password" name="password" required>
+            <div class="card-body">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                    <div class="forgot-password">
+                        <a href="#">Forgot Password?</a>
+                    </div>
+                </form>
             </div>
-            <button type="submit" class="btn btn-primary btn-block">Login</button>
-            <div class="forgot-password">
-                <a href="#">Forgot Password?</a>
-            </div>
-        </form>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
+        const apiUrl =`http://localhost:8081/api/todo/user/login`
         document.getElementById('loginForm').addEventListener('submit', function (event) {
             event.preventDefault();
 
@@ -80,7 +123,7 @@
             btn.innerHTML = 'Logging in...';
             btn.disabled = true;
 
-            fetch('http://localhost:8080/api/todo/user/login', {
+            fetch(apiUrl, {
                 method: 'POST',
                 body: formData
             })
@@ -94,7 +137,7 @@
                 // Show success message or redirect
                 document.body.insertAdjacentHTML('beforeend', '<div class="alert alert-success">Login successful!</div>');
                 // Optionally redirect to another page
-                // window.location.href = '/home';
+                window.location.href = './to_do.html';
             })
             .catch(error => {
                 console.error('Error:', error);

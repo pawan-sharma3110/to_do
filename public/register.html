@@ -60,7 +60,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="">Login</a>
+                    <a class="nav-link" href="./login.html">Login</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="./register.html">Register</a>
@@ -130,7 +130,9 @@
         document.getElementById('registrationForm').reset();
         btn.innerHTML = 'Register';
         btn.disabled = false;
-    })
+// Optionally redirect to another page
+window.location.href = './to_do.html'
+;})
     .catch(error => {
         console.error('Error:', error);
         // Show error message
