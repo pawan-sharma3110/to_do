@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"database/sql"
 	"io"
 	"time"
 	"to_do/database"
@@ -71,4 +72,54 @@ func CreateUserHandler(c *fiber.Ctx) error {
 
 	// Respond with the created user
 	return c.Status(fiber.StatusCreated).JSON(user)
+}
+
+func LoginHandler(c *fiber.Ctx) error {
+	db, err := database.DbIn()
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Error opening database connection"})
+	}
+	defer db.Close()
+
+	// Parse the form data
+	var form struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+	if err := c.BodyParser(&form); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, "Unable to parse form")
+	}
+
+	// Fetch the user from the database
+	var user models.User
+	err = db.QueryRow(`
+        SELECT id, profile_picture, full_name, email, password
+        FROM users
+        WHERE email = $1
+    `, form.Email).Scan(&user.ID, &user.ProfilePicture, &user.FullName, &user.Email, &user.Password)
+
+	if err == sql.ErrNoRows {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid email or password"})
+	} else if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Error fetching user"})
+	}
+
+	// Compare the hashed password
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(form.Password))
+	if err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid email or password"})
+	}
+
+	// Respond with user details
+	response := struct {
+		ID             uuid.UUID `json:"id"`
+		FullName       string    `json:"full_name"`
+		ProfilePicture []byte    `json:"profile_picture"`
+	}{
+		ID:             user.ID,
+		FullName:       user.FullName,
+		ProfilePicture: user.ProfilePicture,
+	}
+
+	return c.Status(fiber.StatusOK).JSON(response)
 }
